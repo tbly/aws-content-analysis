@@ -130,3 +130,11 @@ aws s3 rb s3://$TEMPLATE_BUCKET --force
 aws s3 rb s3://$CODE_BUCKET-$REGION --force
 aws cloudformation delete-stack --stack-name $STACK_NAME --region $REGION
 ```
+
+# Development Notes
+
+## 1. Setup local webapp for development
+
+See README.rm file in docker folder for starting and developing on local
+
+## 2. Make changes for operations and elasticsearch consumer on AWS Lambda

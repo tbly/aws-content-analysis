@@ -63,3 +63,5 @@ getRuntimeConfig().then(function(json) {
     render: h => h(App),
   }).$mount('#app')
 });
+
+Vue.prototype.$Amplify = Amplify; /* VERY IMPORTANT TO FIX ISSUE "[Vue warn]: Error in created hook: TypeError: this.$Amplify is undefined" */

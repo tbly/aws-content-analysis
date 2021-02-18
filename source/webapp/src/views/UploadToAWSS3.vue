@@ -345,7 +345,7 @@
           {text: 'Vietnamese', value: 'vi'},
         ],
         sourceLanguageCode: "en",
-        targetLanguageCode: "es",
+        targetLanguageCode: "vi",
         uploadErrorMessage: "",
         invalidFileMessage: "",
         invalidFileMessages: [],

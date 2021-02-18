@@ -300,8 +300,8 @@
                 filename.substring(filename.lastIndexOf(".")) === ".GIF" ||
                 filename.substring(filename.lastIndexOf(".")) === ".gif" ) {
                 this.mediaType = "image"
-              }
-              if (this.filename.substring(this.filename.lastIndexOf(".")) === ".mp4") {
+              } else {
+                // if (filename.substring(this.filename.lastIndexOf(".")) === ".mp4") {
                 this.mediaType = "video"
               }
               this.filename = filename;

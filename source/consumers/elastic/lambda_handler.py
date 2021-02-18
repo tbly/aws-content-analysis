@@ -8,6 +8,8 @@ import os
 import boto3
 from requests_aws4auth import AWS4Auth
 
+import re
+
 es_endpoint = os.environ['EsEndpoint']
 dataplane_bucket = os.environ['DataplaneBucket']
 
@@ -481,6 +483,8 @@ def process_transcribe(asset, workflow, results):
 
     transcribe_items = []
 
+    idx = 0
+    boffset = -1
     for item in transcript_time:
         content = item["alternatives"][0]["content"]
         confidence = normalize_confidence(item["alternatives"][0]["confidence"])
@@ -496,6 +500,13 @@ def process_transcribe(asset, workflow, results):
         item["content"] = content
         item["workflow"] = workflow
         item["Operator"] = "transcribe"
+        item["index"] = idx
+        if boffset == -1 or ("type" in item and item["type"] != "punctuation"):
+            boffset = boffset + 1
+        item["BeginOffset"] = str(boffset)
+        item["EndOffset"] = str(boffset + len(content))
+        idx = idx + 1
+        boffset = boffset + len(content)
 
         transcribe_items.append(item)
 

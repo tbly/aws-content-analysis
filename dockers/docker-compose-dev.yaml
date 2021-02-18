@@ -1,0 +1,31 @@
+version: "3"
+services:
+    aws_content_analysis_dev:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: aws-content-analysis-dev
+        stdin_open: true
+        tty: true
+        restart: always
+        environment:
+            - DEPLOY_ENV=DEV
+            - PYTHONPATH=/aws_content_analysis
+            - TZ=Asia/Singapore
+        volumes:
+            - ../.:/aws_content_analysis
+            - .:/tmp/dockers
+        working_dir: /aws_content_analysis
+        ulimits:
+            nofile:
+                soft: "999999"
+                hard: "999999"
+        ports:
+          - "8080:8080"
+        networks:
+            - backend_network
+        #entrypoint: sh -c "echo 'Starting DEV npm web server'; cd /aws_content_analysis/source/webapp; npm install; npm run serve"
+    
+networks:
+    backend_network:
+        driver: bridge

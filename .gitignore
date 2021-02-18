@@ -28,6 +28,11 @@ deployment/lambda_layer_factory/*.zip
 deployment/lambda_layer_factory/*.whl
 deployment/lambda_layer_factory/python/**
 deployment/lambda_layer_factory/python 2/**
+deployment/global-s3-assets/
+deployment/regional-s3-assets/
+source/lambda_layer_factory/*.whl
+source/lambda_layer_factory/*.zip
+source/lambda_layer_factory/lambda_layer-python-*
 
 # documentation build
 doc/sphinx/output/
@@ -36,5 +41,5 @@ doc/sphinx/output/
 **/private*webapp/README.md
 
 # LambdaHelper builds
-lib/MediaInsightsEngineLambdaHelper/Media_Insights_Engine_Lambda_Helper.egg-info
-lib/MediaInsightsEngineLambdaHelper/build
+source/lib/MediaInsightsEngineLambdaHelper/Media_Insights_Engine_Lambda_Helper.egg-info
+source/lib/MediaInsightsEngineLambdaHelper/build

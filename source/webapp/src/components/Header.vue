@@ -6,7 +6,7 @@
       variant="dark"
     >
       <b-navbar-brand to="/">
-        AWS Content Analysis
+        AIDA Learning Video Analysis
       </b-navbar-brand>
       <b-navbar-toggle target="nav-collapse" />
 
@@ -28,11 +28,13 @@
           >
             Collection
           </b-nav-item>
+          <!--
           <b-nav-item
             href="" @click.stop.prevent="openWindow('https://docs.aws.amazon.com/solutions/latest/aws-content-analysis/')"
           >
             Help
           </b-nav-item>
+          -->
           <b-nav-item
             v-if="signedIn"
             @click="signOut()"

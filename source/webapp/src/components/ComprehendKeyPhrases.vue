@@ -29,6 +29,16 @@
         :fields="fields"
         :sort-by="sortBy"
       >
+        <template v-slot:cell(PhraseText)="data">
+          <b-button
+            v-b-tooltip.hover
+            variant="outline-info"
+            :title="data.item.PhraseText"
+            @click="goto_video_position(data.item.start_time)"
+          >
+            {{ data.item.PhraseText }}
+          </b-button>
+        </template>
         <template v-slot:cell(Confidence)="data">
           {{ (data.item.Confidence * 1).toFixed(2) }}
         </template>
@@ -57,6 +67,7 @@ export default {
         { key: 'EndOffset', sortable: true },
       ],
       key_phrases: [],
+      elasticsearch_data: [],
       isBusy: false,
       operator: "key_phrases"
     }
@@ -84,6 +95,36 @@ export default {
         this.fetchAssetData()
     },
     async fetchAssetData () {
+      let es_data = [];
+
+      let query1 = 'AssetId:'+this.$route.params.asset_id+ ' _index:mietranscriptiontime';
+      let apiName1 = 'mieElasticsearch';
+      let path1 = '/_search';
+      let apiParams1 = {
+        headers: {'Content-Type': 'application/json'},
+        queryStringParameters: {'q': query1, 'default_operator': 'AND', 'size': 10000}
+      };
+      let response1 = await this.$Amplify.API.get(apiName1, path1, apiParams1);
+      if (!response1) {
+        this.showElasticSearchAlert = true
+      }
+      else {
+        let result1 = await response1;
+        // console.log(result1);
+        let data1 = result1.hits.hits;
+        if (data1.length === 0) {
+          this.noTranscript = true
+        }
+        else {
+          this.noTranscript = false;
+          for (let i = 0, len = data1.length; i < len; i++) {
+            let item = data1[i]._source;
+            es_data.push({"content": item.content, "BeginOffset": item.BeginOffset, "start_time": parseFloat(item.start_time)});
+          }
+        }
+        this.elasticsearch_data = JSON.parse(JSON.stringify(es_data));
+      }
+
       let query = 'AssetId:'+this.$route.params.asset_id+' Confidence:>'+this.Confidence+' _index:miekey_phrases';
       let apiName = 'mieElasticsearch';
       let path = '/_search';
@@ -98,11 +139,21 @@ export default {
       else {
         let result = await response;
         let data = result.hits.hits;
+        // console.log(result);
         for (let i = 0, len = data.length; i < len; i++) {
-          this.key_phrases.push({ "PhraseText": data[i]._source.PhraseText, "Confidence": data[i]._source.Confidence, "BeginOffset": data[i]._source.BeginOffset, "EndOffset": data[i]._source.EndOffset})
+          let start_time = 0;
+          es_data.forEach(function (record) {
+            if (data[i]._source.BeginOffset == record.BeginOffset){
+              start_time = parseFloat(record.start_time)
+            }
+          });
+          this.key_phrases.push({ "PhraseText": data[i]._source.PhraseText, "Confidence": data[i]._source.Confidence, "BeginOffset": data[i]._source.BeginOffset, "EndOffset": data[i]._source.EndOffset, "start_time": start_time})
         }
         this.isBusy = false
       }
+    },
+    goto_video_position(position) {
+      this.player.currentTime(position / 1000);
     }
   }
 }

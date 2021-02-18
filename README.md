@@ -131,10 +131,12 @@ aws s3 rb s3://$CODE_BUCKET-$REGION --force
 aws cloudformation delete-stack --stack-name $STACK_NAME --region $REGION
 ```
 
-# Development Notes
+## Development Notes
 
-## 1. Setup local webapp for development
+### 1. Setup local webapp for development
 
 See README.rm file in docker folder for starting and developing on local
 
-## 2. Make changes for operations and elasticsearch consumer on AWS Lambda
+### 2. Update the workflow code
+
+Make changes for operations and elasticsearch consumer on AWS Lambda
